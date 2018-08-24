@@ -5,13 +5,13 @@ import os
 import sys 
 import h5py 
 import matplotlib.pyplot as plt 
-
+drive_path = '/data/allen-brain-observatory/visual-coding-2p'
 from allensdk.core.brain_observatory_cache import BrainObservatoryCache
 
 from visual_behavior.ophys.dataset.visual_behavior_ophys_dataset import VisualBehaviorOphysDataset
-def observatory_variables():
+def observatory_variables(data_path=drive_path):
     #creates boc object and returns it
-    drive_path = '/data/allen-brain-observatory/visual-coding-2p'
+    #input your own filepath for the data if you are not using AWS
     manifest_file = os.path.join(drive_path, 'manifest.json')
     boc = BrainObservatoryCache(manifest_file=manifest_file)
     print('yes')
