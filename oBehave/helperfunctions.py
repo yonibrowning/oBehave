@@ -3,6 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 
+drive_path = '/data/dynamic-brain-workshop/visual_behavior'
+
 def load_manifest(drive_path = '/data/dynamic-brain-workshop/visual_behavior',
                   manifest_file = 'visual_behavior_data_manifest.csv'):
     '''
