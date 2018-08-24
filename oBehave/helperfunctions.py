@@ -3,9 +3,9 @@ import os
 import numpy as np
 import pandas as pd
 
-drive_path = '/data/dynamic-brain-workshop/visual_behavior'
+drive_path =  '/data/dynamic-brain-workshop/visual_behavior'
 
-def load_manifest(drive_path = '/data/dynamic-brain-workshop/visual_behavior',
+def load_manifest(drive_path = drive_path,
                   manifest_file = 'visual_behavior_data_manifest.csv'):
     '''
     This is just a rapper to load behavior dataset manifest. 
