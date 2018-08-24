@@ -56,7 +56,5 @@ for key in all_data:
     temp1 = temp0.get_running_speed() #change this for different information
     plt.plot(temp1['time'], temp1['running_speed']) #format your figure in a way that makes sense!
     plt.title(str(key)+ "running speed")
-    xlabel('time')
-    ylabel('speed')
     plt.show()
 
