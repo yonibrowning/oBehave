@@ -5,9 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from visual_behavior.ophys.response_analysis.utilities import get_trace_around_timepoint,get_nearest_frame
 
-def dffBlockPlot(dff,tme,starttme,framerate = 31,window = (-.5,.75),startstop = (0,.25),
-                 ax = None,cmap = 'plasma', returnMatrix = False,aspect = 'auto',
-                 plotme = True,xlabel = 'Time',ylabel = 'Flash #'):
+def dffBlockPlot(dff,tme,starttme,framerate = 31,window = (-.5,.75),startstop = (0,.25), ax = None,cmap = 'plasma', returnMatrix = False,aspect = 'auto', plotme = True,xlabel = 'Time',ylabel = 'Flash #'):
     '''
     Plots a block dff block plot. 
     Each plotted row represents a single time series (usually a dff trace)
@@ -32,8 +30,8 @@ def dffBlockPlot(dff,tme,starttme,framerate = 31,window = (-.5,.75),startstop = 
     assert len(window) == 2
     
     # if user did not specify an axis, get one.
-    if ax is None:
-        ax = plt.gca();
+    if plotme and (ax==None):
+        ax = plt.gca()
         
     # Construct matrix
     window_size = int(np.abs(window[0])*framerate)+int(np.abs(window[1])*framerate)+1
@@ -61,9 +59,7 @@ def dffBlockPlot(dff,tme,starttme,framerate = 31,window = (-.5,.75),startstop = 
     else:
         return X,ax
     
-def dffBlockPlot_flashes_allImages(dff,tme,FlashDataFrame,framerate = 31,window = (-.5,.75),
-                 fig = None,cmap = 'plasma',aspect = 'auto',
-                 xlabel = 'Time',ylabel = 'Flash #'):
+def dffBlockPlot_flashes_allImages(dff,tme,FlashDataFrame,framerate = 31,window = (-.5,.75),fig = None,cmap = 'plasma',aspect = 'auto',xlabel = 'Time',ylabel = 'Flash #'):
     '''
     Wrapper on dffBlockPlot to plot block plots for each image.
     See dffBlockPlot for unspecified documentation
@@ -98,12 +94,12 @@ def dffBlockPlot_flashes_allImages(dff,tme,FlashDataFrame,framerate = 31,window 
     return fig
 
 def plotMeanFlashResponseOverTime(flash_response_df,cellnumber,ax = None):
-	'''
+    '''
     Plot Allen-provided mean responce for a given cell
     FlashDataFrame: DataFrame in format of DataFrame 
         from from visual_behavior.ophys.response_analysis.response_analysis.ResponseAnalysis
     '''
-    # handle axes, in case user didn't define them
+# handle axes, in case user didn't define them
     if ax is None:
         ax = plt.gca()
     
