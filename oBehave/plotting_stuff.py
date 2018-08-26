@@ -34,13 +34,14 @@ def dffBlockPlot(dff,tme,starttme,framerate = 31,window = (-.5,.75),startstop = 
         ax = plt.gca()
         
     # Construct matrix
-    window_size = int(np.abs(window[0])*framerate)+int(np.abs(window[1])*framerate)+1
+    window_size = len(get_trace_around_timepoint(tme[0],dff,tme,window,framerate)[0])
     X = np.zeros([len(starttme),window_size])
-
+    
     for ii,ts in enumerate(starttme):
         if ((ts+window[0]>tme[0])&(ts+window[1]<tme[-1])):
             ts_idx = get_nearest_frame(ts,tme)
             X[ii,:] = get_trace_around_timepoint(tme[ts_idx],dff,tme,window,framerate)[0]
+
         
     # plot and return
     if plotme:
@@ -54,6 +55,7 @@ def dffBlockPlot(dff,tme,starttme,framerate = 31,window = (-.5,.75),startstop = 
 
     else:
         return X
+    
     if returnMatrix:
         return ax
     else:
