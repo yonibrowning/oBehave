@@ -95,6 +95,27 @@ def dffBlockPlot_flashes_allImages(dff,tme,FlashDataFrame,framerate = 31,window 
     
     return fig
 
+def ecdf(data,plotme = True,ax = None,lineopts={'linestyle':'-','marker':'.'}):
+    '''
+    Emperical CDF
+    Imputs: 
+    data- 1D distributed data points
+    plotme: should we make a plot? default, true
+    ax: axis to plot on. Default is plt.gca()
+    lineopts: dictionary of other line options. See plt.plot.
+    '''
+    if ax is None:
+        ax = plt.gca()
+    data = np.array(data)# Just in case
+    data = data[np.isfinite(data)]
+    cdfx = np.sort(np.unique(data[np.isfinite(data)]))
+    yval = np.zeros(cdfx.shape)
+    for ii,xx in enumerate(cdfx):
+        yval[ii] = float(len(data[data<xx]))/float(len(data))
+    if plotme:
+        ax.plot(cdfx,yval,**lineopts)
+    return cdfx,yval
+
 def plotMeanFlashResponseOverTime(flash_response_df,cellnumber,ax = None):
     '''
     Plot Allen-provided mean responce for a given cell
