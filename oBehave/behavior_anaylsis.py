@@ -31,31 +31,6 @@ def includeNovelSession(manifest):
                 manifest.at[Rindex,'first_session'] = 1
     return manifest
 
-def includeAddRepeats(flash_data_frame,trial_data_frame):
-    '''
-    Computes the number of repeats in a flash data frame
-    '''
-    flash_data_join = flash_data_frame.merge(trial_data_frame,left_on ='start_time',right_on = 'change_time',how = 'left')
-    addthis = np.zeros((len(flash_data_frame['image_name'].values,)))
-    addblock = np.zeros((len(flash_data_frame['image_name'].values,)))
-    addblocktype = []
-    addthis[0] = 1
-    addblock[0] = 1
-    addblocktype = [None]
-    for nn in np.arange(1,len(addthis),1):
-        if flash_data_frame['image_name'][nn]==flash_data_frame['image_name'][nn-1]:
-            addthis[nn] = addthis[nn-1]+1
-            addblock[nn] = addblock[nn-1]
-            addblocktype.append(addblocktype[nn-1])
-        else:
-            addthis[nn] = 1
-            addblock[nn] = addblock[nn-1]+1
-            addblocktype.append(flash_data_join['response_type'][nn])
-            
-    flash_data_frame['repeats'] = addthis
-    flash_data_frame['block'] = addblock
-    flash_data_frame['response_type'] = addblocktype
-    return flash_data_frame
 
 def moving_response_average(dataset,window = 5, tme = None):
     '''
