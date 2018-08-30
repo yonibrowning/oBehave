@@ -2,6 +2,67 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
+class RepeatsCounter(object):
+    def __init__(self, first_repeat=1, first_block=1, stimulus_key='image_name', cell_key='cell'):
+        
+        self.stimulus_key = stimulus_key
+        self.cell_key = cell_key
+        
+        self.first_repeat = first_repeat
+        self.first_block = first_block
+        
+        self.repeat = first_repeat
+        self.block = first_block
+        
+        self.image = None
+        self.cell = None
+        
+    def __call__(self, row):
+        if self.cell != row[self.cell_key]:
+            self.repeat = self.first_repeat
+            self.block = self.first_block
+        elif self.image != row[self.stimulus_key]:
+            self.block += 1
+            self.repeat = self.first_repeat
+        else:
+            self.repeat += 1
+            
+        self.image = row[self.stimulus_key]
+        self.cell = row[self.cell_key]
+            
+        return (self.block, self.repeat)
+
+
+def include_add_repeats(flash_response, all_trials, stimulus_key='image_name'):
+    merged = flash_response.merge(all_trials,left_on ='start_time',right_on = 'change_time',how = 'left')
+    
+    rc = RepeatsCounter(stimulus_key=stimulus_key)
+    merged['foo'] = merged.apply(rc, axis=1)
+    merged['block'] = merged.apply(lambda row: row['foo'][0], axis=1)
+    merged['repeats'] = merged.apply(lambda row: row['foo'][1], axis=1)
+    merged = merged.drop(columns=['foo'])
+    
+    return merged
+    
+def validate_resets(df):
+    def check_flash(row):
+        if row['flash_number'] == 0:
+            return row['block'] == 1
+        else:
+            return True
+    
+    results = df.apply(lambda row: check_flash, axis=1).values
+    assert all(results)
+    
+def validate_block_transitions(df):
+    def check(row):
+        if row['block'] == 1:
+            return row['repeats'] == 1
+    
+    results = df.apply(lambda row: check, axis=1).values
+    assert all(results)
+
+
 def includeDateTime(manifest,dateStringKey = 'experiment_date',datetimeKey = 'experiment_datetime',dateConversionStr = '%m/%d/%Y %H:%S'):
     experiment_date = manifest[dateStringKey].values
     experiment_datetime = []
@@ -31,31 +92,36 @@ def includeNovelSession(manifest):
                 manifest.at[Rindex,'first_session'] = 1
     return manifest
 
-def includeAddRepeats(flash_data_frame,trial_data_frame):
-    '''
-    Computes the number of repeats in a flash data frame
-    '''
-    flash_data_join = flash_data_frame.merge(trial_data_frame,left_on ='start_time',right_on = 'change_time',how = 'left')
-    addthis = np.zeros((len(flash_data_frame['image_name'].values,)))
-    addblock = np.zeros((len(flash_data_frame['image_name'].values,)))
-    addblocktype = []
-    addthis[0] = 1
-    addblock[0] = 1
-    addblocktype = [None]
-    for nn in np.arange(1,len(addthis),1):
-        if flash_data_frame['image_name'][nn]==flash_data_frame['image_name'][nn-1]:
-            addthis[nn] = addthis[nn-1]+1
-            addblock[nn] = addblock[nn-1]
-            addblocktype.append(addblocktype[nn-1])
-        else:
-            addthis[nn] = 1
-            addblock[nn] = addblock[nn-1]+1
-            addblocktype.append(flash_data_join['response_type'][nn])
+# def includeAddRepeats(flash_data_frame,trial_data_frame):
+#     '''
+#     Computes the number of repeats in a flash data frame
+#     Inputs:
+#     flash_data_frame = ResponseAnalysis().flash_response_df
+#     trial_data_frame = VisualBehaviorOphysDataset().all_trials
+    
+    
+#     '''
+#     flash_data_join = flash_data_frame.merge(trial_data_frame,left_on ='start_time',right_on = 'change_time',how = 'left')
+#     addthis = np.zeros((len(flash_data_frame['image_name'].values,)))
+#     addblock = np.zeros((len(flash_data_frame['image_name'].values,)))
+#     addblocktype = []
+#     addthis[0] = 1
+#     addblock[0] = 1
+#     addblocktype = [None]
+#     for nn in np.arange(1,len(addthis),1):
+#         if flash_data_frame['image_name'][nn]==flash_data_frame['image_name'][nn-1]:
+#             addthis[nn] = addthis[nn-1]+1
+#             addblock[nn] = addblock[nn-1]
+#             addblocktype.append(addblocktype[nn-1])
+#         else:
+#             addthis[nn] = 1
+#             addblock[nn] = addblock[nn-1]+1
+#             addblocktype.append(flash_data_join['response_type'][nn])
             
-    flash_data_frame['repeats'] = addthis
-    flash_data_frame['block'] = addblock
-    flash_data_frame['response_type'] = addblocktype
-    return flash_data_frame
+#     flash_data_frame['repeats'] = addthis
+#     flash_data_frame['block'] = addblock
+#     flash_data_frame['response_type'] = addblocktype
+#     return flash_data_frame
 
 def moving_response_average(dataset,window = 5, tme = None):
     '''
