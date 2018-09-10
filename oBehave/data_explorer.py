@@ -1,5 +1,15 @@
 def data_explorer(expt_id, begin, end):
-
+    '''
+    Implemenation of a tool for exploring a visual behavior dataset.
+    Plots pretty much all of the info from a given experiment in an easy to read format.
+    
+    Inputs:
+    expt_id: experiment number to look up. This script will read the AWS manifest for you.
+    begin: where to start plotting
+    end: where to stop plotting.
+    
+    Created by Deepa Ramamurthy, August 2018
+    '''
     # AWS1
     drive_path = '/data/dynamic-brain-workshop/visual_behavior'
 

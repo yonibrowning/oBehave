@@ -3,6 +3,11 @@ import os
 import numpy as np
 import pandas as pd
 
+'''
+I got tired of typing some stuff, so these are just cute wrappers to save time
+Created by Yoni Browning, August 2018
+'''
+
 # Local of the event drive path
 event_drive_path_AWS = '/data/dynamic-brain-workshop/visual_behavior_events' #AWS Location
 drive_path =  '/data/dynamic-brain-workshop/visual_behavior'

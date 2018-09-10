@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 drive_path = '/data/allen-brain-observatory/visual-coding-2p'
 from allensdk.core.brain_observatory_cache import BrainObservatoryCache
 
+'''
+These are some wrappers to save time loading visual behavior datset components.
+Created by Sam Sied, August 2018. 
+'''
+
 from visual_behavior.ophys.dataset.visual_behavior_ophys_dataset import VisualBehaviorOphysDataset
 def observatory_variables(data_path=drive_path):
     #creates boc object and returns it
