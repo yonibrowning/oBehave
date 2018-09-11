@@ -1,0 +1,6 @@
+Instructions to download a folder from AWS to your local computer
+Open terminal
+navigate to the directory containing the target folder
+enter: tar -czvf tmp.tar target_folder/
+
+Then select the zip folder "tar" and download clicking the top-right donwload button
